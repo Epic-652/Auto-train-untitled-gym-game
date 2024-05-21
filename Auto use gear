@@ -1,0 +1,49 @@
+-- Roblox LocalScript (Client-Side)
+
+-- Get the local player
+local player = game.Players.LocalPlayer
+
+-- Function to auto use gear continuously when equipped
+local function autoUseGear(player)
+    -- Check if the player has a Backpack (where tools are stored)
+    local backpack = player:WaitForChild("Backpack")
+    
+    -- Function to handle the auto-use functionality
+    local function handleTool(tool)
+        if tool:IsA("Tool") then
+            -- When the tool is equipped, start an infinite loop to use it
+            tool.Equipped:Connect(function()
+                while tool.Parent == player.Character do
+                    -- Check if the gear has an 'Activate' method
+                    if tool:FindFirstChild("Activate") then
+                        tool:Activate()
+                    else
+                        -- Use alternative method if 'Activate' does not exist
+                        pcall(function() tool:Activate() end)  -- Use pcall to handle potential errors
+                    end
+                    -- Adding a small delay to prevent overwhelming the server
+                    wait(0.1)  -- Adjust the delay as needed
+                end
+            end)
+        end
+    end
+
+    -- Listen for tools being added to the Backpack and Character
+    backpack.ChildAdded:Connect(handleTool)
+    player.CharacterAdded:Connect(function(character)
+        character.ChildAdded:Connect(handleTool)
+    end)
+
+    -- Initial setup for tools already present in the Backpack and Character
+    for _, tool in ipairs(backpack:GetChildren()) do
+        handleTool(tool)
+    end
+    if player.Character then
+        for _, tool in ipairs(player.Character:GetChildren()) do
+            handleTool(tool)
+        end
+    end
+end
+
+-- Apply the function to the local player
+autoUseGear(player)
