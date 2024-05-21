@@ -1,41 +1,48 @@
-local i=Instance.new 
-local bc=BrickColor.new 
-local c3=Color3.new 
-local u2=UDim2.new 
-local e=Enum 
-local i1=i("TextButton") 
-local i2=i("ScreenGui") 
-i1.BackgroundColor=bc(1001) 
-i1.BackgroundColor3=c3(1,1,1) 
-i1.BorderColor=bc(1003) 
-i1.BorderColor3=c3(0,0,0) 
-i1.BorderSizePixel=0 
-i1.Position=u2(0.800,0,0,10) 
-i1.Size=u2(0,100,0,50) 
-i1.Parent=i2 
-i1.Font=e.Font.SourceSans 
-i1.FontSize=e.FontSize.Size14 
-i1.TextColor=bc(1003) 
-i1.TextColor3=c3(0,0,0) 
+local i = Instance.new
+local bc = BrickColor.new
+local c3 = Color3.new
+local u2 = UDim2.new
+local e = Enum
+local i1 = i("TextButton")
+local i2 = i("ScreenGui")
+i1.BackgroundColor = bc(1001)
+i1.BackgroundColor3 = c3(1, 1, 1)
+i1.BorderColor = bc(1003)
+i1.BorderColor3 = c3(0, 0, 0)
+i1.BorderSizePixel = 0
+i1.Position = u2(0.800, 0, 0, 10)
+i1.Size = u2(0, 100, 0, 50)
+i1.Parent = i2
+i1.Font = e.Font.SourceSans
+i1.FontSize = e.FontSize.Size14
+i1.TextColor = bc(1003)
+i1.TextColor3 = c3(0, 0, 0)
 i2.IgnoreGuiInset = true
-i2.ResetOnSpawn=false 
-i2.ZIndexBehavior=e.ZIndexBehavior.Sibling 
-i2.Parent=game.Players.LocalPlayer.PlayerGui
+i2.ResetOnSpawn = false
+i2.ZIndexBehavior = e.ZIndexBehavior.Sibling
+i2.Parent = game.Players.LocalPlayer.PlayerGui
 
-local looping=true
+local looping = true
 local function yes()
-    looping=not looping
+    looping = not looping
     if looping then
-        i1.BackgroundColor3=c3(0,1,0)
+        i1.BackgroundColor3 = c3(0, 1, 0)
     else
-        i1.BackgroundColor3=c3(1,0,0)
+        i1.BackgroundColor3 = c3(1, 0, 0)
     end
 end
-local remote=game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Exercise")
-i1.MouseButton1Click:Connect(yes) 
+
+local remote = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("RemoteEvent")
+
+i1.MouseButton1Click:Connect(yes)
 yes()
+
+local args = {
+    [1] = "Click"
+}
+
 while task.wait() do
     if looping then
-        remote:FireServer()
+        remote:FireServer(unpack(args))
     end
 end
